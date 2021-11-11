@@ -5,6 +5,7 @@ import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
+import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key? key}) : super(key: key);
@@ -101,8 +102,10 @@ class MainPageStateWidget extends StatelessWidget {
               imageWidth: 126,
               imageTopPadding: 22,
             );
-          case MainPageState.searchResults:
           case MainPageState.favorites:
+            return FavoritesWidget();
+          case MainPageState.searchResults:
+            return SearchResultsWidget();
           default:
             return Center(
               child: Text(
@@ -112,6 +115,101 @@ class MainPageStateWidget extends StatelessWidget {
             );
         }
       },
+    );
+  }
+}
+
+class FavoritesWidget extends StatelessWidget {
+  const FavoritesWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 90),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            "Your favorites",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
+              height: 1.375,
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Batman",
+            realName: "Bruce Wayne",
+            imageUrl:
+                "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
+          ),
+        ),
+        SizedBox(height: 8),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Ironman",
+            realName: "Tony Stark",
+            imageUrl:
+                "https://www.superherodb.com/pictures2/portraits/10/100/85.jpg",
+          ),
+        ),
+      ],
+    );
+  }
+}
+class SearchResultsWidget extends StatelessWidget {
+  const SearchResultsWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 90),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            "Search results",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
+              height: 1.375,
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Batman",
+            realName: "Bruce Wayne",
+            imageUrl:
+                "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
+          ),
+        ),
+        SizedBox(height: 8),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Venom",
+            realName: "Eddie Brock",
+            imageUrl:
+                "https://www.superherodb.com/pictures2/portraits/10/100/22.jpg",
+          ),
+        ),
+      ],
     );
   }
 }
