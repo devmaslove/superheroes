@@ -29,6 +29,7 @@ class InfoWithButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Stack(
+            alignment: AlignmentDirectional.topCenter,
             children: [
               Container(
                 width: 108,

@@ -82,7 +82,25 @@ class MainPageStateWidget extends StatelessWidget {
               imageTopPadding: 9,
             );
           case MainPageState.nothingFound:
+            return InfoWithButton(
+              title: "Nothing found",
+              subtitle: "Search for something else",
+              buttonText: "Search",
+              assetImage: SuperheroesImages.hulk,
+              imageHeight: 112,
+              imageWidth: 84,
+              imageTopPadding: 16,
+            );
           case MainPageState.loadingError:
+            return InfoWithButton(
+              title: "Error happened",
+              subtitle: "Please, try again",
+              buttonText: "Retry",
+              assetImage: SuperheroesImages.superMan,
+              imageHeight: 106,
+              imageWidth: 126,
+              imageTopPadding: 22,
+            );
           case MainPageState.searchResults:
           case MainPageState.favorites:
           default:
