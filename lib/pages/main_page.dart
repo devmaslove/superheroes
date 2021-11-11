@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
+import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
@@ -150,6 +151,13 @@ class FavoritesWidget extends StatelessWidget {
             realName: "Bruce Wayne",
             imageUrl:
                 "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
+            onTap: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(title: "Batman"),
+                ),
+              );
+            },
           ),
         ),
         SizedBox(height: 8),
@@ -160,6 +168,13 @@ class FavoritesWidget extends StatelessWidget {
             realName: "Tony Stark",
             imageUrl:
                 "https://www.superherodb.com/pictures2/portraits/10/100/85.jpg",
+            onTap: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(title: "Ironman"),
+                ),
+              );
+            },
           ),
         ),
       ],
@@ -197,6 +212,13 @@ class SearchResultsWidget extends StatelessWidget {
             realName: "Bruce Wayne",
             imageUrl:
                 "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
+            onTap: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(title: "Batman"),
+                ),
+              );
+            },
           ),
         ),
         SizedBox(height: 8),
@@ -207,6 +229,13 @@ class SearchResultsWidget extends StatelessWidget {
             realName: "Eddie Brock",
             imageUrl:
                 "https://www.superherodb.com/pictures2/portraits/10/100/22.jpg",
+            onTap: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(title: "Venom"),
+                ),
+              );
+            },
           ),
         ),
       ],
