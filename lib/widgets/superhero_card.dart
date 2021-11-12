@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:superheroes/resources/superheroes_colors.dart';
 
 class SuperheroCard extends StatelessWidget {
   final String name;
@@ -21,7 +22,7 @@ class SuperheroCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 70,
-        color: Color(0xFF2C3243),
+        color: SuperheroesColors.indigo,
         child: Row(
           children: [
             Image.network(
