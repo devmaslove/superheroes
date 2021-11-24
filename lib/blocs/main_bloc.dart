@@ -6,7 +6,7 @@ class MainBloc {
   static const minSymbols = 3;
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
   final favoriteSuperheroesSubject =
-      BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
+      BehaviorSubject<List<SuperheroInfo>>.seeded([]);
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
@@ -16,6 +16,7 @@ class MainBloc {
   MainBloc() {
     stateSubject.sink.add(MainPageState.noFavorites);
     textSubscription = currentTextSubject.listen((value) {
+      print("CURRENT TEXT CHANGED");
       searchSubscription?.cancel();
       if (value.isEmpty) {
         stateSubject.add(MainPageState.favorites);
@@ -43,6 +44,12 @@ class MainBloc {
       },
     );
   }
+
+  Stream<List<SuperheroInfo>> observeFavoriteSuperhiroes() =>
+      favoriteSuperheroesSubject;
+
+  Stream<List<SuperheroInfo>> observeSearchedSuperhiroes() =>
+      searchedSuperheroesSubject;
 
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
