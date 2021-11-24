@@ -201,10 +201,10 @@ class SuperheroesList extends StatelessWidget {
           if (!snapshot.hasData || snapshot.data == null) {
             return const SizedBox.shrink();
           }
-          final List<SuperheroInfo> superhiroes = snapshot.data!;
+          final List<SuperheroInfo> superheroes = snapshot.data!;
           return ListView.separated(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            itemCount: superhiroes.length + 1,
+            itemCount: superheroes.length + 1,
             itemBuilder: (BuildContext context, int index) {
               if (index == 0) {
                 return Padding(
@@ -221,13 +221,11 @@ class SuperheroesList extends StatelessWidget {
                   ),
                 );
               }
-              final SuperheroInfo item = superhiroes[index - 1];
+              final SuperheroInfo item = superheroes[index - 1];
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: SuperheroCard(
-                  name: item.name,
-                  realName: item.realName,
-                  imageUrl: item.imageUrl,
+                  superheroInfo: item,
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
