@@ -87,6 +87,9 @@ class _SearchWidgetState extends State<SearchWidget> {
         fontWeight: FontWeight.w400,
         color: Colors.white,
       ),
+      cursorColor: Colors.white,
+      textCapitalization: TextCapitalization.words,
+      textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         isDense: true,
         filled: true,
@@ -105,6 +108,13 @@ class _SearchWidgetState extends State<SearchWidget> {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: Colors.white,
+            width: 2,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
