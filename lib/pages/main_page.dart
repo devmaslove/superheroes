@@ -203,6 +203,7 @@ class SuperheroesList extends StatelessWidget {
           }
           final List<SuperheroInfo> superhiroes = snapshot.data!;
           return ListView.separated(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemCount: superhiroes.length + 1,
             itemBuilder: (BuildContext context, int index) {
               if (index == 0) {
