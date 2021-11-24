@@ -80,49 +80,57 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w400,
-        color: Colors.white,
-      ),
-      cursorColor: Colors.white,
-      textCapitalization: TextCapitalization.words,
-      textInputAction: TextInputAction.search,
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: SuperheroesColors.indigo75,
-        prefixIcon: Icon(
-          Icons.search,
-          color: Colors.white54,
-          size: 24,
-        ),
-        suffix: GestureDetector(
-          onTap: () => controller.clear(),
-          child: Icon(
-            Icons.clear,
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    return StreamBuilder<String>(
+      stream: bloc.currentTextSubject.distinct(),
+      builder: (context, snapshot) {
+        final String text = !snapshot.hasData || snapshot.data == null ? "" : snapshot.data!;
+        return TextField(
+          controller: controller,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: Colors.white,
-            width: 2,
+          cursorColor: Colors.white,
+          textCapitalization: TextCapitalization.words,
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            isDense: true,
+            filled: true,
+            fillColor: SuperheroesColors.indigo75,
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.white54,
+              size: 24,
+            ),
+            suffix: GestureDetector(
+              onTap: () => controller.clear(),
+              child: Icon(
+                Icons.clear,
+                color: Colors.white,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 2,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: text.isEmpty ? Colors.white24 : Colors.white,
+                width: text.isEmpty ? 1 : 2,
+              ),
+            ),
           ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
-            color: Colors.white24,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -219,7 +227,7 @@ class SuperheroesList extends StatelessWidget {
               if (index == 0) {
                 return Padding(
                   padding:
-                      EdgeInsets.only(left: 16, right: 16, top: 90, bottom: 12),
+                  EdgeInsets.only(left: 16, right: 16, top: 90, bottom: 12),
                   child: Text(
                     title,
                     style: TextStyle(
