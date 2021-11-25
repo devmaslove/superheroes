@@ -57,10 +57,10 @@ class MainBloc {
     );
   }
 
-  Stream<List<SuperheroInfo>> observeFavoriteSuperhiroes() =>
+  Stream<List<SuperheroInfo>> observeFavoriteSuperheroes() =>
       favoriteSuperheroesSubject;
 
-  Stream<List<SuperheroInfo>> observeSearchedSuperhiroes() =>
+  Stream<List<SuperheroInfo>> observeSearchedSuperheroes() =>
       searchedSuperheroesSubject;
 
   Future<List<SuperheroInfo>> search(final String text) async {

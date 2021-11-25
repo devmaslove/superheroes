@@ -180,7 +180,7 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.searchResults:
             return SuperheroesList(
               title: "Search results",
-              stream: bloc.observeSearchedSuperhiroes(),
+              stream: bloc.observeSearchedSuperheroes(),
             );
           default:
             return Center(
@@ -207,7 +207,7 @@ class FavoritesWidget extends StatelessWidget {
       children: [
         SuperheroesList(
           title: "Your favorites",
-          stream: bloc.observeFavoriteSuperhiroes(),
+          stream: bloc.observeFavoriteSuperheroes(),
         ),
         Align(
           alignment: Alignment.bottomCenter,
