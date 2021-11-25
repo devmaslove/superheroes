@@ -5,6 +5,7 @@ import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
@@ -84,7 +85,8 @@ class _SearchWidgetState extends State<SearchWidget> {
     return StreamBuilder<String>(
       stream: bloc.currentTextSubject.distinct(),
       builder: (context, snapshot) {
-        final String text = !snapshot.hasData || snapshot.data == null ? "" : snapshot.data!;
+        final String text =
+            !snapshot.hasData || snapshot.data == null ? "" : snapshot.data!;
         return TextField(
           controller: controller,
           style: TextStyle(
@@ -152,15 +154,7 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return MinSymbolsWidget();
           case MainPageState.noFavorites:
-            return InfoWithButton(
-              title: "No favorites yet",
-              subtitle: "Search and add",
-              buttonText: "Search",
-              assetImage: SuperheroesImages.ironMan,
-              imageHeight: 119,
-              imageWidth: 108,
-              imageTopPadding: 9,
-            );
+            return NoFavoritesWidget();
           case MainPageState.nothingFound:
             return InfoWithButton(
               title: "Nothing found",
@@ -182,10 +176,7 @@ class MainPageStateWidget extends StatelessWidget {
               imageTopPadding: 22,
             );
           case MainPageState.favorites:
-            return SuperheroesList(
-              title: "Your favorites",
-              stream: bloc.observeFavoriteSuperhiroes(),
-            );
+            return FavoritesWidget();
           case MainPageState.searchResults:
             return SuperheroesList(
               title: "Search results",
@@ -200,6 +191,63 @@ class MainPageStateWidget extends StatelessWidget {
             );
         }
       },
+    );
+  }
+}
+
+class FavoritesWidget extends StatelessWidget {
+  const FavoritesWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    return Stack(
+      children: [
+        SuperheroesList(
+          title: "Your favorites",
+          stream: bloc.observeFavoriteSuperhiroes(),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ActionButton(
+            onTap: () => bloc.removeFavorite(),
+            text: "Remove",
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class NoFavoritesWidget extends StatelessWidget {
+  const NoFavoritesWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    return Stack(
+      children: [
+        InfoWithButton(
+          title: "No favorites yet",
+          subtitle: "Search and add",
+          buttonText: "Search",
+          assetImage: SuperheroesImages.ironMan,
+          imageHeight: 119,
+          imageWidth: 108,
+          imageTopPadding: 9,
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ActionButton(
+            onTap: () => bloc.removeFavorite(),
+            text: "Remove",
+          ),
+        ),
+      ],
     );
   }
 }
@@ -227,7 +275,7 @@ class SuperheroesList extends StatelessWidget {
               if (index == 0) {
                 return Padding(
                   padding:
-                  EdgeInsets.only(left: 16, right: 16, top: 90, bottom: 12),
+                      EdgeInsets.only(left: 16, right: 16, top: 90, bottom: 12),
                   child: Text(
                     title,
                     style: TextStyle(

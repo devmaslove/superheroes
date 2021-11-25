@@ -6,7 +6,7 @@ class MainBloc {
   static const minSymbols = 3;
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
   final favoriteSuperheroesSubject =
-      BehaviorSubject<List<SuperheroInfo>>.seeded([]);
+      BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
@@ -72,6 +72,16 @@ class MainBloc {
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
+
+  void removeFavorite() {
+    if (favoriteSuperheroesSubject.value.length == 0) {
+      favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
+    } else {
+      favoriteSuperheroesSubject.add(favoriteSuperheroesSubject.value
+          .take(favoriteSuperheroesSubject.value.length - 1)
+          .toList());
+    }
+  }
 
   void nextState() {
     final currentState = stateSubject.value;
