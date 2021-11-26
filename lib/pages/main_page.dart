@@ -69,70 +69,70 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   final TextEditingController controller = TextEditingController();
+  bool _haveSearchedText = false;
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() => bloc.updateText(controller.text));
+      controller.addListener(() {
+        bloc.updateText(controller.text);
+        final haveText = controller.text.isNotEmpty;
+        if (_haveSearchedText != haveText)
+          setState(() {
+            _haveSearchedText = haveText;
+          });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-    return StreamBuilder<String>(
-      stream: bloc.currentTextSubject.distinct(),
-      builder: (context, snapshot) {
-        final String text =
-            !snapshot.hasData || snapshot.data == null ? "" : snapshot.data!;
-        return TextField(
-          controller: controller,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
+    return TextField(
+      controller: controller,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w400,
+        color: Colors.white,
+      ),
+      cursorColor: Colors.white,
+      textCapitalization: TextCapitalization.words,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        isDense: true,
+        filled: true,
+        fillColor: SuperheroesColors.indigo75,
+        prefixIcon: Icon(
+          Icons.search,
+          color: Colors.white54,
+          size: 24,
+        ),
+        suffix: GestureDetector(
+          onTap: () => controller.clear(),
+          child: Icon(
+            Icons.clear,
             color: Colors.white,
           ),
-          cursorColor: Colors.white,
-          textCapitalization: TextCapitalization.words,
-          textInputAction: TextInputAction.search,
-          decoration: InputDecoration(
-            isDense: true,
-            filled: true,
-            fillColor: SuperheroesColors.indigo75,
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.white54,
-              size: 24,
-            ),
-            suffix: GestureDetector(
-              onTap: () => controller.clear(),
-              child: Icon(
-                Icons.clear,
-                color: Colors.white,
-              ),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: Colors.white,
-                width: 2,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: text.isEmpty ? Colors.white24 : Colors.white,
-                width: text.isEmpty ? 1 : 2,
-              ),
-            ),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: Colors.white,
+            width: 2,
           ),
-        );
-      },
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: _haveSearchedText ? Colors.white : Colors.white24,
+            width: _haveSearchedText ? 2 : 1,
+          ),
+        ),
+      ),
     );
   }
 }
