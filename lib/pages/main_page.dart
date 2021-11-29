@@ -12,6 +12,7 @@ import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
   final http.Client? client;
+
   MainPage({Key? key, this.client}) : super(key: key);
 
   @override
@@ -172,6 +173,7 @@ class MainPageStateWidget extends StatelessWidget {
               imageHeight: 112,
               imageWidth: 84,
               imageTopPadding: 16,
+              onTap: () => {},
             );
           case MainPageState.loadingError:
             return InfoWithButton(
@@ -182,6 +184,7 @@ class MainPageStateWidget extends StatelessWidget {
               imageHeight: 106,
               imageWidth: 126,
               imageTopPadding: 22,
+              onTap: () => {},
             );
           case MainPageState.favorites:
             return FavoritesWidget();
@@ -247,6 +250,7 @@ class NoFavoritesWidget extends StatelessWidget {
           imageHeight: 119,
           imageWidth: 108,
           imageTopPadding: 9,
+          onTap: () => {},
         ),
         Align(
           alignment: Alignment.bottomCenter,
