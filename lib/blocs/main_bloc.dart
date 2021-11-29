@@ -107,6 +107,10 @@ class MainBloc {
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
 
+  void retry() {
+    searchForSuperheroes(currentTextSubject.value);
+  }
+
   void removeFavorite() {
     if (favoriteSuperheroesSubject.value.length == 0) {
       favoriteSuperheroesSubject.add(SuperheroInfo.mocked);

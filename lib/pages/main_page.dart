@@ -194,7 +194,7 @@ class MainPageStateWidget extends StatelessWidget {
               imageHeight: 106,
               imageWidth: 126,
               imageTopPadding: 22,
-              onTap: () => {},
+              onTap: () => bloc.retry(),
             );
           case MainPageState.favorites:
             return FavoritesWidget();
