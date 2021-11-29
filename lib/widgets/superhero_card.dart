@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
+import 'package:superheroes/resources/superheroes_images.dart';
 
 class SuperheroCard extends StatelessWidget {
   final SuperheroInfo superheroInfo;
@@ -36,6 +37,14 @@ class SuperheroCard extends StatelessWidget {
                 width: 70,
                 height: 70,
                 fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Center(
+                  child: Image.asset(
+                    SuperheroesImages.unknown,
+                    width: 20,
+                    height: 62,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 progressIndicatorBuilder: (context, url, progress) => Center(
                   child: Container(
                     width: 24,
