@@ -49,18 +49,20 @@ class _MainPageState extends State<MainPage> {
 }
 
 class MainPageContent extends StatelessWidget {
+  final FocusNode search = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        MainPageStateWidget(),
+        MainPageStateWidget(focusNode: search),
         Padding(
           padding: const EdgeInsets.only(
             top: 12,
             left: 16,
             right: 16,
           ),
-          child: SearchWidget(),
+          child: SearchWidget(focusNode: search),
         ),
       ],
     );
@@ -68,8 +70,11 @@ class MainPageContent extends StatelessWidget {
 }
 
 class SearchWidget extends StatefulWidget {
+  final FocusNode? focusNode;
+
   const SearchWidget({
     Key? key,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -100,6 +105,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      focusNode: widget.focusNode,
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w400,
@@ -147,6 +153,10 @@ class _SearchWidgetState extends State<SearchWidget> {
 }
 
 class MainPageStateWidget extends StatelessWidget {
+  final FocusNode? focusNode;
+
+  const MainPageStateWidget({Key? key, this.focusNode}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
@@ -163,7 +173,7 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return MinSymbolsWidget();
           case MainPageState.noFavorites:
-            return NoFavoritesWidget();
+            return NoFavoritesWidget(focusNode: focusNode);
           case MainPageState.nothingFound:
             return InfoWithButton(
               title: "Nothing found",
@@ -173,7 +183,7 @@ class MainPageStateWidget extends StatelessWidget {
               imageHeight: 112,
               imageWidth: 84,
               imageTopPadding: 16,
-              onTap: () => {},
+              onTap: () => focusNode?.requestFocus(),
             );
           case MainPageState.loadingError:
             return InfoWithButton(
@@ -233,8 +243,11 @@ class FavoritesWidget extends StatelessWidget {
 }
 
 class NoFavoritesWidget extends StatelessWidget {
+  final FocusNode? focusNode;
+
   const NoFavoritesWidget({
     Key? key,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -250,7 +263,7 @@ class NoFavoritesWidget extends StatelessWidget {
           imageHeight: 119,
           imageWidth: 108,
           imageTopPadding: 9,
-          onTap: () => {},
+          onTap: () => focusNode?.requestFocus(),
         ),
         Align(
           alignment: Alignment.bottomCenter,
