@@ -34,8 +34,6 @@ class SuperheroCard extends StatelessWidget {
               height: 70,
               child: CachedNetworkImage(
                 imageUrl: superheroInfo.imageUrl,
-                width: 70,
-                height: 70,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Center(
                   child: Image.asset(
@@ -46,7 +44,7 @@ class SuperheroCard extends StatelessWidget {
                   ),
                 ),
                 progressIndicatorBuilder: (context, url, progress) => Center(
-                  child: Container(
+                  child: SizedBox(
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
