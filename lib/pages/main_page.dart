@@ -48,8 +48,19 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class MainPageContent extends StatelessWidget {
-  final FocusNode search = FocusNode();
+class MainPageContent extends StatefulWidget {
+  @override
+  State<MainPageContent> createState() => _MainPageContentState();
+}
+
+class _MainPageContentState extends State<MainPageContent> {
+  late FocusNode search;
+
+  @override
+  void initState() {
+    super.initState();
+    search = FocusNode();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +77,12 @@ class MainPageContent extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    search.dispose();
+    super.dispose();
   }
 }
 
