@@ -2,66 +2,93 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:superheroes/blocs/superhero_bloc.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
 import 'package:superheroes/model/superhero.dart';
+import 'package:superheroes/resources/superhero_icons.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:http/http.dart' as http;
 
-class SuperheroPage extends StatelessWidget {
+class SuperheroPage extends StatefulWidget {
+  final http.Client? client;
   final String id;
 
   const SuperheroPage({
     Key? key,
+    this.client,
     required this.id,
   }) : super(key: key);
 
   @override
+  _SuperheroPageState createState() => _SuperheroPageState();
+}
+
+class _SuperheroPageState extends State<SuperheroPage> {
+  late SuperheroBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = SuperheroBloc(client: widget.client, id: widget.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final superhero = Superhero(
-      name: "Batman",
-      biography: Biography(
-        fullName: "Vasya Pupkin",
-        alignment: "good",
-        aliases: ["Batan", "Botik"],
-        placeOfBirth: "Russia, Vologda",
+    return Provider.value(
+      value: bloc,
+      child: Scaffold(
+        backgroundColor: SuperheroesColors.background,
+        body: SuperheroContentPage(),
       ),
-      image: ServerImage(
-        url: "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
-      ),
-      powerstats: Powerstats(
-        intelligence: "90",
-        strength: "80",
-        speed: "16",
-        durability: "45",
-        power: "100",
-        combat: "0",
-      ),
-      id: id,
     );
-    return Scaffold(
-      backgroundColor: SuperheroesColors.background,
-      body: CustomScrollView(
-        slivers: [
-          SuperheroAppBar(superhero: superhero),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                if (superhero.powerstats.isNotNull())
-                  PowerstatsWidget(
-                    powerstats: superhero.powerstats,
-                  ),
-                BiographyWidget(
-                  biography: superhero.biography,
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+}
+
+class SuperheroContentPage extends StatelessWidget {
+  const SuperheroContentPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final SuperheroBloc bloc =
+        Provider.of<SuperheroBloc>(context, listen: false);
+    return StreamBuilder<Superhero>(
+        stream: bloc.observeSuperhero(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data == null)
+            return const SizedBox.shrink();
+          final superhero = snapshot.data!;
+          return CustomScrollView(
+            slivers: [
+              SuperheroAppBar(superhero: superhero),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    if (superhero.powerstats.isNotNull())
+                      PowerstatsWidget(
+                        powerstats: superhero.powerstats,
+                      ),
+                    BiographyWidget(
+                      biography: superhero.biography,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+              ),
+            ],
+          );
+        });
   }
 }
 
@@ -80,6 +107,9 @@ class SuperheroAppBar extends StatelessWidget {
       pinned: true,
       floating: true,
       expandedHeight: 348,
+      actions: [
+        FavoriteButton(),
+      ],
       backgroundColor: SuperheroesColors.background,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
@@ -97,6 +127,41 @@ class SuperheroAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class FavoriteButton extends StatelessWidget {
+  const FavoriteButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final SuperheroBloc bloc =
+        Provider.of<SuperheroBloc>(context, listen: false);
+    return StreamBuilder<bool>(
+        stream: bloc.observeIsFavorite(),
+        initialData: false,
+        builder: (context, snapshot) {
+          final favorite =
+              !snapshot.hasData || snapshot.data == null || snapshot.data!;
+          return GestureDetector(
+            onTap: () =>
+                favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
+            child: Container(
+              width: 52,
+              height: 52,
+              alignment: Alignment.center,
+              child: Image.asset(
+                favorite
+                    ? SuperheroesIcon.starFilled
+                    : SuperheroesIcon.starEmpty,
+                width: 32,
+                height: 32,
+              ),
+            ),
+          );
+        });
   }
 }
 
