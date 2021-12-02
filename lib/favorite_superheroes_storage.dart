@@ -42,8 +42,12 @@ class FavoriteSuperheroesStorage {
     return _setRawSuperheroes(rawSuperheroes);
   }
 
-  Future<Superhero?> getSuperhero(final String id) {
-    throw UnimplementedError();
+  Future<Superhero?> getSuperhero(final String id) async {
+    final superheroes = await _getSuperheroes();
+    for (final superhero in superheroes) {
+      if (superhero.id == id) return superhero;
+    }
+    return null;
   }
 
   Stream<List<Superhero>> observeFavoriteSuperheroes() {
