@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:superheroes/exception/api_exception.dart';
 import 'package:superheroes/favorite_superheroes_storage.dart';
+import 'package:superheroes/model/alignment_info.dart';
 import 'package:superheroes/model/superhero.dart';
 
 class MainBloc {
@@ -16,10 +17,10 @@ class MainBloc {
 
   StreamSubscription? textSubscription;
   StreamSubscription? searchSubscription;
+  StreamSubscription? removeFromFavoriteSubscription;
   http.Client? client;
 
   MainBloc({this.client}) {
-    stateSubject.sink.add(MainPageState.noFavorites);
     textSubscription =
         Rx.combineLatest2<String, List<Superhero>, MainPageStateInfo>(
                 currentTextSubject
@@ -106,6 +107,21 @@ class MainBloc {
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
 
+  void removeFromFavorites(final String id) {
+    removeFromFavoriteSubscription?.cancel();
+    removeFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
+        .removeFromFavorites(id)
+        .asStream()
+        .listen(
+      (event) {
+        print('Removed from favorites: $event');
+      },
+      onError: (error, stackTrace) {
+        print("Error happened in removeFromFavorites: $error, $stackTrace");
+      },
+    );
+  }
+
   void retry() {
     searchForSuperheroes(currentTextSubject.value);
   }
@@ -128,6 +144,7 @@ class MainBloc {
     currentTextSubject.close();
     textSubscription?.cancel();
     searchSubscription?.cancel();
+    removeFromFavoriteSubscription?.cancel();
     client?.close();
   }
 }
@@ -147,12 +164,14 @@ class SuperheroInfo {
   final String name;
   final String realName;
   final String imageUrl;
+  final AlignmentInfo? alignmentInfo;
 
   const SuperheroInfo({
     required this.id,
     required this.name,
     required this.realName,
     required this.imageUrl,
+    this.alignmentInfo,
   });
 
   factory SuperheroInfo.fromSuperhero(final Superhero superhero) {
@@ -161,12 +180,13 @@ class SuperheroInfo {
       name: superhero.name,
       realName: superhero.biography.fullName,
       imageUrl: superhero.image.url,
+      alignmentInfo: superhero.biography.alignmentInfo,
     );
   }
 
   @override
   String toString() {
-    return 'SuperheroInfo{id: $id, name: $name, realName: $realName, imageUrl: $imageUrl}';
+    return 'SuperheroInfo{id: $id, name: $name, realName: $realName, imageUrl: $imageUrl, alignmentInfo: $alignmentInfo}';
   }
 
   @override
@@ -177,11 +197,17 @@ class SuperheroInfo {
           id == other.id &&
           name == other.name &&
           realName == other.realName &&
-          imageUrl == other.imageUrl;
+          imageUrl == other.imageUrl &&
+          alignmentInfo == other.alignmentInfo;
 
   @override
   int get hashCode =>
-      id.hashCode ^ name.hashCode ^ realName.hashCode ^ imageUrl.hashCode;
+      id.hashCode ^
+      name.hashCode ^
+      realName.hashCode ^
+      imageUrl.hashCode ^
+      alignmentInfo.hashCode;
+
   static const mocked = [
     SuperheroInfo(
       id: "70",
