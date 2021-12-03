@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/animation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
@@ -14,6 +13,7 @@ class SuperheroBloc {
   final String id;
 
   final superheroSubject = BehaviorSubject<Superhero>();
+  final superheroPageState = BehaviorSubject<SuperheroPageState>();
 
   StreamSubscription? requestSubscription;
   StreamSubscription? addToFavoriteSubscription;
@@ -29,6 +29,8 @@ class SuperheroBloc {
 
   Stream<Superhero> observeSuperhero() => superheroSubject;
 
+  Stream<SuperheroPageState> observeSuperheroPageState() => superheroPageState;
+
   void getFromFavorites() {
     getFromFavoriteSubscription?.cancel();
     getFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
@@ -38,6 +40,9 @@ class SuperheroBloc {
       (superhero) {
         if (superhero != null) {
           superheroSubject.add(superhero);
+          superheroPageState.add(SuperheroPageState.loaded);
+        } else {
+          superheroPageState.add(SuperheroPageState.loading);
         }
         requestSuperhero();
       },
@@ -88,8 +93,12 @@ class SuperheroBloc {
     requestSubscription = request().asStream().listen(
       (superhero) {
         superheroSubject.add(superhero);
+        superheroPageState.add(SuperheroPageState.loaded);
       },
       onError: (error, stackTrace) {
+        if (superheroPageState.value == SuperheroPageState.loading) {
+          superheroPageState.add(SuperheroPageState.error);
+        }
         print("Error happened in requestSuperhero: $error, $stackTrace");
       },
     );
@@ -123,5 +132,12 @@ class SuperheroBloc {
     addToFavoriteSubscription?.cancel();
     removeFromFavoriteSubscription?.cancel();
     superheroSubject.close();
+    superheroPageState.close();
   }
+}
+
+enum SuperheroPageState {
+  loading,
+  loaded,
+  error,
 }

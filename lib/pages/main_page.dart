@@ -294,7 +294,10 @@ class SuperheroesList extends StatelessWidget {
               return ListTitleWidget(title: title);
             }
             final SuperheroInfo item = superheroes[index - 1];
-            return ListTile(superhero: item);
+            return ListTile(
+              superhero: item,
+              ableToSwipe: true,
+            );
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(height: 8);
@@ -307,10 +310,12 @@ class SuperheroesList extends StatelessWidget {
 
 class ListTile extends StatelessWidget {
   final SuperheroInfo superhero;
+  final bool ableToSwipe;
 
   const ListTile({
     Key? key,
     required this.superhero,
+    required this.ableToSwipe,
   }) : super(key: key);
 
   @override
@@ -319,6 +324,8 @@ class ListTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Dismissible(
+        direction:
+            ableToSwipe ? DismissDirection.horizontal : DismissDirection.none,
         key: ValueKey(superhero.id),
         child: SuperheroCard(
           superheroInfo: superhero,

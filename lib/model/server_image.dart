@@ -6,7 +6,7 @@ part 'server_image.g.dart';
 class ServerImage {
   final String url;
 
-  ServerImage({required this.url});
+  ServerImage(this.url);
 
   factory ServerImage.fromJson(final Map<String, dynamic> json) =>
       _$ServerImageFromJson(json);
