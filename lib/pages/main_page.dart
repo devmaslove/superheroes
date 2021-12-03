@@ -323,38 +323,47 @@ class ListTile extends StatelessWidget {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Dismissible(
-        direction:
-            ableToSwipe ? DismissDirection.horizontal : DismissDirection.none,
-        key: ValueKey(superhero.id),
-        child: SuperheroCard(
-          superheroInfo: superhero,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SuperheroPage(id: superhero.id),
+      child: ableToSwipe
+          ? Dismissible(
+              key: ValueKey(superhero.id),
+              child: SuperheroCard(
+                superheroInfo: superhero,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SuperheroPage(id: superhero.id),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        background: Container(
-          height: 70,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: SuperheroesColors.red,
-          ),
-          child: Text(
-            "Remove from favorites".toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
+              background: Container(
+                height: 70,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: SuperheroesColors.red,
+                ),
+                child: Text(
+                  "Remove from favorites".toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
+            )
+          : SuperheroCard(
+              superheroInfo: superhero,
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SuperheroPage(id: superhero.id),
+                  ),
+                );
+              },
             ),
-          ),
-        ),
-        onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
-      ),
     );
   }
 }
