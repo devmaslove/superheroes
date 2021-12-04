@@ -392,15 +392,119 @@ class BiographyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      alignment: Alignment.center,
-      child: Text(
-        biography.toJson().toString(),
-        style: TextStyle(
-          color: Colors.white,
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 4),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: SuperheroesColors.indigo,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    "Bio".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 18,
+                      // height: 25 / 18,
+                      // letterSpacing: 1.4,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                // SizedBox(height: 8),
+                BioTextWidget(
+                  title: "Full name",
+                  text: biography.fullName,
+                ),
+                BioTextWidget(
+                  title: "Aliases",
+                  text: biography.aliases.join(", "),
+                ),
+                BioTextWidget(
+                  title: "Place of birth",
+                  text: biography.placeOfBirth,
+                ),
+              ],
+            ),
+          ),
+          if (biography.alignmentInfo != null)
+            Align(
+              alignment: Alignment.topRight,
+              child: RotatedBox(
+                quarterTurns: 1,
+                child: Container(
+                  width: 70,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: biography.alignmentInfo!.color,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      biography.alignmentInfo!.name.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
+    );
+  }
+}
+
+class BioTextWidget extends StatelessWidget {
+  final String title;
+  final String text;
+
+  const BioTextWidget({
+    Key? key,
+    required this.title,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title.toUpperCase(),
+          style: TextStyle(
+            color: SuperheroesColors.greyText,
+            fontSize: 12,
+            // height: 16 / 12,
+            // letterSpacing: 1.4,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            // height: 22 / 16,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        SizedBox(height: 20),
+      ],
     );
   }
 }

@@ -1,4 +1,5 @@
 
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -10,12 +11,18 @@ import 'lesson_4/task_4.dart';
 import 'lesson_4/task_7.dart';
 
 void main() async {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    MethodChannel('plugins.flutter.io/path_provider')
+        .setMockMethodCallHandler((MethodCall methodCall) async {
+      return ".";
+    });
+  });
   await loadAppFonts();
   await dotenv.load(fileName: ".env");
   group("l08h01", () => runTestLesson4Task1());
   group("l08h02", () => runTestLesson4Task2());
   group("l08h03", () => runTestLesson4Task3());
-  // group("l08h04", () => runTestLesson4Task4());
-  // group("l08h07", () => runTestLesson4Task7());
+  group("l08h04", () => runTestLesson4Task4());
+  group("l08h07", () => runTestLesson4Task7());
 }
