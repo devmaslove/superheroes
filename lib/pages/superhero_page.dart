@@ -11,6 +11,7 @@ import 'package:superheroes/resources/superhero_icons.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/info_with_button.dart';
 
 class SuperheroPage extends StatefulWidget {
   final http.Client? client;
@@ -55,6 +56,95 @@ class _SuperheroPageState extends State<SuperheroPage> {
 
 class SuperheroContentPage extends StatelessWidget {
   const SuperheroContentPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final SuperheroBloc bloc =
+        Provider.of<SuperheroBloc>(context, listen: false);
+    return StreamBuilder<SuperheroPageState>(
+      stream: bloc.observeSuperheroPageState(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return SizedBox();
+        }
+        final SuperheroPageState state = snapshot.data!;
+        switch (state) {
+          case SuperheroPageState.loading:
+            return SuperheroLoadingWidget();
+          case SuperheroPageState.loaded:
+            return SuperheroLoadedWidget();
+          case SuperheroPageState.error:
+            return SuperheroErrorWidget();
+          default:
+            return Center(
+              child: Text(
+                state.toString(),
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+        }
+      },
+    );
+  }
+}
+
+class SuperheroLoadingWidget extends StatelessWidget {
+  const SuperheroLoadingWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: SuperheroesColors.background,
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.only(top: 60),
+            child: CircularProgressIndicator(
+              color: SuperheroesColors.blue,
+              strokeWidth: 4,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SuperheroErrorWidget extends StatelessWidget {
+  const SuperheroErrorWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final SuperheroBloc bloc =
+        Provider.of<SuperheroBloc>(context, listen: false);
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: SuperheroesColors.background,
+        ),
+        SizedBox(height: 60),
+        InfoWithButton(
+          title: "Error happened",
+          subtitle: "Please, try again",
+          buttonText: "Retry",
+          assetImage: SuperheroesImages.superMan,
+          imageHeight: 106,
+          imageWidth: 126,
+          imageTopPadding: 22,
+          onTap: () => bloc.retry(),
+        ),
+      ],
+    );
+  }
+}
+
+class SuperheroLoadedWidget extends StatelessWidget {
+  const SuperheroLoadedWidget({
     Key? key,
   }) : super(key: key);
 
