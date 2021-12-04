@@ -92,7 +92,12 @@ class SuperheroBloc {
     requestSubscription?.cancel();
     requestSubscription = request().asStream().listen(
       (superhero) {
-        superheroSubject.add(superhero);
+        final superheroOld = superheroSubject.valueOrNull;
+        if (superheroOld == null ||
+            json.encode(superheroOld.toJson()) !=
+                json.encode(superhero.toJson())) {
+          superheroSubject.add(superhero);
+        }
         superheroPageState.add(SuperheroPageState.loaded);
       },
       onError: (error, stackTrace) {
