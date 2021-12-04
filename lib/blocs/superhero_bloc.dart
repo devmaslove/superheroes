@@ -16,6 +16,7 @@ class SuperheroBloc {
   final superheroPageState = BehaviorSubject<SuperheroPageState>();
 
   StreamSubscription? requestSubscription;
+  StreamSubscription? updateFavoriteSubscription;
   StreamSubscription? addToFavoriteSubscription;
   StreamSubscription? getFromFavoriteSubscription;
   StreamSubscription? removeFromFavoriteSubscription;
@@ -70,6 +71,24 @@ class SuperheroBloc {
     }
   }
 
+  void updateFavorite() {
+    final superhero = superheroSubject.valueOrNull;
+    if (superhero != null) {
+      updateFavoriteSubscription?.cancel();
+      updateFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
+          .updateFavorites(superhero)
+          .asStream()
+          .listen(
+            (event) {
+          if (event) print('Updated favorites: $event');
+        },
+        onError: (error, stackTrace) {
+          print("Error happened in updateFavorite: $error, $stackTrace");
+        },
+      );
+    }
+  }
+
   void removeFromFavorites() {
     removeFromFavoriteSubscription?.cancel();
     removeFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
@@ -97,8 +116,15 @@ class SuperheroBloc {
             json.encode(superheroOld.toJson()) !=
                 json.encode(superhero.toJson())) {
           superheroSubject.add(superhero);
+          if (superheroPageState.value == SuperheroPageState.loaded) {
+            // мы зазгрузили из файворитов и получили обновление
+            // нужно обновить избранного
+            updateFavorite();
+          }
         }
-        superheroPageState.add(SuperheroPageState.loaded);
+        if (superheroPageState.value != SuperheroPageState.loaded) {
+          superheroPageState.add(SuperheroPageState.loaded);
+        }
       },
       onError: (error, stackTrace) {
         if (superheroPageState.value == SuperheroPageState.loading) {
@@ -135,6 +161,7 @@ class SuperheroBloc {
     requestSubscription?.cancel();
     getFromFavoriteSubscription?.cancel();
     addToFavoriteSubscription?.cancel();
+    updateFavoriteSubscription?.cancel();
     removeFromFavoriteSubscription?.cancel();
     superheroSubject.close();
     superheroPageState.close();

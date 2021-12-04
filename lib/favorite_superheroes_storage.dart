@@ -22,6 +22,16 @@ class FavoriteSuperheroesStorage {
     return _setRawSuperheroes(rawSuperheroes);
   }
 
+  Future<bool> updateFavorites(final Superhero superhero) async {
+    final superheroes = await _getSuperheroes();
+    int pos = superheroes.indexWhere((element) => element.id == superhero.id);
+    if (pos != -1) {
+      superheroes[pos] = superhero;
+      return _setSuperheroes(superheroes);
+    }
+    return false;
+  }
+
   Future<bool> removeFromFavorites(final String id) async {
     final superheroes = await _getSuperheroes();
     superheroes.removeWhere((superhero) => superhero.id == id);
