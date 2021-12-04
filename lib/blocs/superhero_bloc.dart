@@ -79,7 +79,7 @@ class SuperheroBloc {
           .updateFavorites(superhero)
           .asStream()
           .listen(
-            (event) {
+        (event) {
           if (event) print('Updated favorites: $event');
         },
         onError: (error, stackTrace) {
@@ -127,12 +127,20 @@ class SuperheroBloc {
         }
       },
       onError: (error, stackTrace) {
-        if (superheroPageState.value != SuperheroPageState.loaded) {
+        if (superheroPageState.value != SuperheroPageState.loaded &&
+            superheroPageState.value != SuperheroPageState.error) {
           superheroPageState.add(SuperheroPageState.error);
         }
         print("Error happened in requestSuperhero: $error, $stackTrace");
       },
     );
+  }
+
+  void retry() {
+    if (superheroPageState.value != SuperheroPageState.loading) {
+      superheroPageState.add(SuperheroPageState.loading);
+    }
+    requestSuperhero();
   }
 
   Future<Superhero> request() async {
