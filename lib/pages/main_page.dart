@@ -338,13 +338,33 @@ class ListTile extends StatelessWidget {
               ),
               background: Container(
                 height: 70,
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: SuperheroesColors.red,
                 ),
                 child: Text(
-                  "Remove from favorites".toUpperCase(),
+                  "Remove\nfrom\nfavorites".toUpperCase(),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              secondaryBackground: Container(
+                height: 70,
+                padding: EdgeInsets.only(right: 16),
+                alignment: Alignment.centerRight,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: SuperheroesColors.red,
+                ),
+                child: Text(
+                  "Remove\nfrom\nfavorites".toUpperCase(),
+                  textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.white,
