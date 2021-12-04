@@ -127,7 +127,7 @@ class SuperheroBloc {
         }
       },
       onError: (error, stackTrace) {
-        if (superheroPageState.value == SuperheroPageState.loading) {
+        if (superheroPageState.value != SuperheroPageState.loaded) {
           superheroPageState.add(SuperheroPageState.error);
         }
         print("Error happened in requestSuperhero: $error, $stackTrace");
