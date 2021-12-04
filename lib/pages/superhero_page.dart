@@ -6,12 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/superhero_bloc.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
-import 'package:superheroes/model/server_image.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resources/superhero_icons.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
-import 'package:superheroes/widgets/action_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:superheroes/resources/superheroes_images.dart';
 
 class SuperheroPage extends StatefulWidget {
   final http.Client? client;
@@ -124,6 +123,19 @@ class SuperheroAppBar extends StatelessWidget {
         background: CachedNetworkImage(
           imageUrl: superhero.image.url,
           fit: BoxFit.cover,
+          placeholder: (context, url) => Container(
+            color: SuperheroesColors.indigo,
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: SuperheroesColors.indigo,
+            alignment: Alignment.center,
+            child: Image.asset(
+              SuperheroesImages.unknownBig,
+              fit: BoxFit.cover,
+              width: 85,
+              height: 264,
+            ),
+          ),
         ),
       ),
     );
