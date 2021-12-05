@@ -12,4 +12,9 @@ class ServerImage {
       _$ServerImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$ServerImageToJson(this);
+
+  @override
+  String toString() {
+    return 'ServerImage{url: $url}';
+  }
 }

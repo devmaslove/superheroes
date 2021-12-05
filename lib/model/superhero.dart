@@ -25,4 +25,9 @@ class Superhero {
       _$SuperheroFromJson(json);
 
   Map<String, dynamic> toJson() => _$SuperheroToJson(this);
+
+  @override
+  String toString() {
+    return 'Superhero{id: $id, name: $name, biography: $biography, powerstats: $powerstats, image: $image';
+  }
 }

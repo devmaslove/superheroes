@@ -40,6 +40,7 @@ class SuperheroBloc {
         .listen(
       (superhero) {
         if (superhero != null) {
+          // print(superhero);
           superheroSubject.add(superhero);
           superheroPageState.add(SuperheroPageState.loaded);
         } else {
@@ -112,6 +113,10 @@ class SuperheroBloc {
     requestSubscription = request().asStream().listen(
       (superhero) {
         final superheroOld = superheroSubject.valueOrNull;
+        // print(superheroOld);
+        // print(superhero);
+        // print(json.encode(superheroOld!.toJson()));
+        // print(json.encode(superhero.toJson()));
         if (superheroOld == null ||
             json.encode(superheroOld.toJson()) !=
                 json.encode(superhero.toJson())) {

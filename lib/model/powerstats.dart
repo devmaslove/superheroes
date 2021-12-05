@@ -50,4 +50,9 @@ class Powerstats {
       _$PowerstatsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PowerstatsToJson(this);
+
+  @override
+  String toString() {
+    return 'Powerstats{intelligence: $intelligence, strength: $strength, speed: $speed, durability: $durability, power: $power, combat: $combat}';
+  }
 }

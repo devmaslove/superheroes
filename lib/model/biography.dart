@@ -23,4 +23,9 @@ class Biography {
   Map<String, dynamic> toJson() => _$BiographyToJson(this);
 
   AlignmentInfo? get alignmentInfo => AlignmentInfo.fromAlignment(alignment);
+
+  @override
+  String toString() {
+    return 'Biography{fullName: $fullName, alignment: $alignment, aliases: $aliases, placeOfBirth: $placeOfBirth}';
+  }
 }
