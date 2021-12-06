@@ -17,4 +17,14 @@ class ServerImage {
   String toString() {
     return 'ServerImage{url: $url}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ServerImage &&
+          runtimeType == other.runtimeType &&
+          url == other.url;
+
+  @override
+  int get hashCode => url.hashCode;
 }

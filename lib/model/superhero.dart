@@ -30,4 +30,23 @@ class Superhero {
   String toString() {
     return 'Superhero{id: $id, name: $name, biography: $biography, powerstats: $powerstats, image: $image';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Superhero &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          biography == other.biography &&
+          powerstats == other.powerstats &&
+          image == other.image;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      biography.hashCode ^
+      powerstats.hashCode ^
+      image.hashCode;
 }
