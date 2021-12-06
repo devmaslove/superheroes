@@ -40,7 +40,6 @@ class SuperheroBloc {
         .listen(
       (superhero) {
         if (superhero != null) {
-          // print(superhero);
           superheroSubject.add(superhero);
           superheroPageState.add(SuperheroPageState.loaded);
         } else {
@@ -114,13 +113,7 @@ class SuperheroBloc {
     requestSubscription = request().asStream().listen(
       (superhero) {
         final superheroOld = superheroSubject.valueOrNull;
-        // print(superheroOld);
-        // print(superhero);
-        // print(json.encode(superheroOld!.toJson()));
-        // print(json.encode(superhero.toJson()));
-        if (superheroOld == null ||
-            json.encode(superheroOld.toJson()) !=
-                json.encode(superhero.toJson())) {
+        if (superheroOld == null || superheroOld != superhero) {
           superheroSubject.add(superhero);
           if (superheroPageState.value == SuperheroPageState.loaded) {
             // мы зазгрузили из файворитов и получили обновление
