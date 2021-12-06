@@ -75,6 +75,7 @@ class SuperheroBloc {
   void updateFavorite() {
     final superhero = superheroSubject.valueOrNull;
     if (superhero != null) {
+      print("Do update favorite: $superhero");
       updateFavoriteSubscription?.cancel();
       updateFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
           .updateFavorites(superhero)
@@ -159,7 +160,7 @@ class SuperheroBloc {
       throw ApiException('Client error happened');
     } else if (response.statusCode == 200) {
       final decoded = json.decode(response.body);
-      print(decoded);
+      print("Request server by id: $decoded");
       if (decoded['response'] == 'success') {
         return Superhero.fromJson(decoded);
       } else if (decoded['response'] == 'error') {

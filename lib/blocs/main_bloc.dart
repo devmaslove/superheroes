@@ -84,7 +84,7 @@ class MainBloc {
       throw ApiException('Client error happened');
     } else if (response.statusCode == 200) {
       final decoded = json.decode(response.body);
-      print(decoded);
+      print("Search on server: $decoded");
       if (decoded['response'] == 'success') {
         final List<dynamic> results = decoded['results'];
         final List<Superhero> superheroes = results
