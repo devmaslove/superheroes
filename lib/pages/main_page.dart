@@ -218,6 +218,7 @@ class MainPageStateWidget extends StatelessWidget {
             return SuperheroesList(
               title: "Search results",
               stream: bloc.observeSearchedSuperheroes(),
+              ableToSwipe: false,
             );
           default:
             return Center(
@@ -243,6 +244,7 @@ class FavoritesWidget extends StatelessWidget {
     return SuperheroesList(
       title: "Your favorites",
       stream: bloc.observeFavoriteSuperheroes(),
+      ableToSwipe: true,
     );
   }
 }
@@ -273,9 +275,14 @@ class NoFavoritesWidget extends StatelessWidget {
 class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
+  final bool ableToSwipe;
 
-  const SuperheroesList({Key? key, required this.title, required this.stream})
-      : super(key: key);
+  const SuperheroesList({
+    Key? key,
+    required this.title,
+    required this.stream,
+    required this.ableToSwipe,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +303,7 @@ class SuperheroesList extends StatelessWidget {
             final SuperheroInfo item = superheroes[index - 1];
             return ListTile(
               superhero: item,
-              ableToSwipe: true,
+              ableToSwipe: ableToSwipe,
             );
           },
           separatorBuilder: (BuildContext context, int index) {
