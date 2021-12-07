@@ -508,7 +508,7 @@ class BiographyWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                // SizedBox(height: 8),
+                const SizedBox(height: 8),
                 BioTextWidget(
                   title: "Full name",
                   text: biography.fullName,

@@ -328,69 +328,55 @@ class ListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    final card = SuperheroCard(
+      superheroInfo: superhero,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => SuperheroPage(id: superhero.id),
+          ),
+        );
+      },
+    );
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: ableToSwipe
           ? Dismissible(
               key: ValueKey(superhero.id),
-              child: SuperheroCard(
-                superheroInfo: superhero,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SuperheroPage(id: superhero.id),
-                    ),
-                  );
-                },
-              ),
-              background: Container(
-                height: 70,
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: SuperheroesColors.red,
-                ),
-                child: Text(
-                  "Remove\nfrom\nfavorites".toUpperCase(),
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              secondaryBackground: Container(
-                height: 70,
-                padding: EdgeInsets.only(right: 16),
-                alignment: Alignment.centerRight,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: SuperheroesColors.red,
-                ),
-                child: Text(
-                  "Remove\nfrom\nfavorites".toUpperCase(),
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
+              child: card,
+              background: BackgroundCard(left: true),
+              secondaryBackground: BackgroundCard(left: false),
               onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
             )
-          : SuperheroCard(
-              superheroInfo: superhero,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => SuperheroPage(id: superhero.id),
-                  ),
-                );
-              },
-            ),
+          : card,
+    );
+  }
+}
+
+class BackgroundCard extends StatelessWidget {
+  final bool left;
+
+  const BackgroundCard({Key? key, required this.left}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 70,
+      alignment: left ? Alignment.centerLeft : Alignment.centerRight,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: SuperheroesColors.red,
+      ),
+      child: Text(
+        "Remove\nfrom\nfavorites".toUpperCase(),
+        textAlign: left ? TextAlign.left : TextAlign.right,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 }

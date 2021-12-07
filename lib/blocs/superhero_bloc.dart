@@ -28,9 +28,10 @@ class SuperheroBloc {
     getFromFavorites();
   }
 
-  Stream<Superhero> observeSuperhero() => superheroSubject;
+  Stream<Superhero> observeSuperhero() => superheroSubject.distinct();
 
-  Stream<SuperheroPageState> observeSuperheroPageState() => superheroPageState;
+  Stream<SuperheroPageState> observeSuperheroPageState() =>
+      superheroPageState.distinct();
 
   void getFromFavorites() {
     getFromFavoriteSubscription?.cancel();
@@ -45,7 +46,7 @@ class SuperheroBloc {
         } else {
           superheroPageState.add(SuperheroPageState.loading);
         }
-        requestSuperhero();
+        requestSuperhero(superhero != null);
       },
       onError: (error, stackTrace) {
         print("Error happened in getFromFavorites: $error, $stackTrace");
@@ -108,38 +109,26 @@ class SuperheroBloc {
   Stream<bool> observeIsFavorite() =>
       FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
-  void requestSuperhero() {
+  void requestSuperhero(final bool isInFavorite) {
     requestSubscription?.cancel();
     requestSubscription = request().asStream().listen(
       (superhero) {
-        final superheroOld = superheroSubject.valueOrNull;
-        if (superheroOld == null || superheroOld != superhero) {
-          superheroSubject.add(superhero);
-          if (superheroPageState.value == SuperheroPageState.loaded) {
-            // мы зазгрузили из файворитов и получили обновление
-            // нужно обновить избранного
-            updateFavorite();
-          }
-        }
-        if (superheroPageState.value != SuperheroPageState.loaded) {
-          superheroPageState.add(SuperheroPageState.loaded);
-        }
+        superheroSubject.add(superhero);
+        // мы зазгрузили из файворитов и получили обновление
+        // нужно обновить избранного
+        if (isInFavorite) updateFavorite();
+        superheroPageState.add(SuperheroPageState.loaded);
       },
       onError: (error, stackTrace) {
-        if (superheroPageState.value != SuperheroPageState.loaded &&
-            superheroPageState.value != SuperheroPageState.error) {
-          superheroPageState.add(SuperheroPageState.error);
-        }
+        if (!isInFavorite) superheroPageState.add(SuperheroPageState.error);
         print("Error happened in requestSuperhero: $error, $stackTrace");
       },
     );
   }
 
   void retry() {
-    if (superheroPageState.value != SuperheroPageState.loading) {
-      superheroPageState.add(SuperheroPageState.loading);
-    }
-    requestSuperhero();
+    superheroPageState.add(SuperheroPageState.loading);
+    requestSuperhero(false);
   }
 
   Future<Superhero> request() async {
